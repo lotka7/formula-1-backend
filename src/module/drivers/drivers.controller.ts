@@ -1,5 +1,6 @@
-import { Controller, Get, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { DriversService } from './drivers.service';
+import Driver from './interfaces/driver.interface';
 
 @Controller('drivers')
 export class DriversController {
@@ -7,7 +8,15 @@ export class DriversController {
 
   @Get()
   @HttpCode(200)
-  async get() {
+  getDrivers() {
     return this.driversService.getDrivers();
+  }
+
+  @Post(':driverId/overtake')
+  overtakeDriver(
+    @Param('driverId') driverId: number,
+    @Body() drivers: Driver[],
+  ) {
+    return this.driversService.overtakeDriver(driverId, drivers);
   }
 }

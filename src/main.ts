@@ -6,7 +6,6 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   // Set global prefix
   app.setGlobalPrefix('api');
 
@@ -16,6 +15,8 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.enableCors();
 
   const config = new DocumentBuilder()
     .setTitle('self-checkout api')
@@ -32,6 +33,7 @@ async function bootstrap() {
     customCss: theme.getBuffer('dark'),
   };
   SwaggerModule.setup('/swagger', app, document, options);
+
   await app.listen(3001);
 }
 bootstrap();
