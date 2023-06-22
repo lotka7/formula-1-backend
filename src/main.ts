@@ -1,11 +1,13 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
 import { SwaggerTheme } from 'swagger-themes';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // Set global prefix
   app.setGlobalPrefix('api');
 
@@ -16,7 +18,13 @@ async function bootstrap() {
     }),
   );
 
+  // CORS
   app.enableCors();
+
+  // Serve static files
+  app.useStaticAssets(join(__dirname, '..', 'src', 'public'), {
+    prefix: '/static/',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('self-checkout api')

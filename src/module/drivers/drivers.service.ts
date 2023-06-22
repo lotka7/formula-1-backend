@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
-import * as path from 'path';
 import { MyLogger } from 'src/logger/services/my-logger.service';
 import Driver from './interfaces/driver.interface';
 
@@ -12,8 +11,6 @@ export class DriversService {
     this.myLogger.setContext('DriversService');
     this.loadDrivers();
     this.assignRandomPlaces();
-    // Load image URLs for each driver
-    this.loadDriverImageUrls();
   }
 
   // Lifecycle event
@@ -46,16 +43,6 @@ export class DriversService {
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
-  }
-
-  private loadDriverImageUrls() {
-    console.log(__dirname);
-    const publicDir = path.join(__dirname, '../../..', 'src', 'public');
-    console.log('asd', publicDir);
-    for (const driver of this.drivers) {
-      const imgUrl = path.join(publicDir, `${driver.code.toLowerCase()}.jpg`);
-      driver.imgUrl = imgUrl;
-    }
   }
 
   public overtakeDriver(driverId: number, drivers: Driver[]) {
@@ -105,7 +92,6 @@ export class DriversService {
   }
 
   public async getDrivers() {
-    console.log(this.drivers);
     return this.drivers;
   }
 }
